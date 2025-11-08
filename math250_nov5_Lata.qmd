@@ -1,0 +1,94 @@
+---
+title: "math250_nov5_lata"
+author: "Lata Bhatta"
+format: html
+editor: visual
+embed-resources: true
+---
+
+```{r}
+#| warning: false
+#| message: false
+
+
+library(tidyverse)
+library(ISLR2)
+library(palmerpenguins)
+
+data("Carseats")
+
+```
+
+------------------------------------------------------------------------
+
+**Question 1:**
+
+Does this data provide evidence against the company's claim that the average price of their own seats is \$110?
+
+```{r}
+glimpse(Carseats)
+mean(Carseats$Price)
+```
+
+The sample mean is about \$115.80, which is higher than the claimed \$110.
+
+```{r}
+ggplot(Carseats, aes(x = Price)) +
+  geom_histogram(bins = 30, 
+                 fill = "skyblue", 
+                 color = "black") +
+  geom_vline(xintercept = 110, 
+             color = "red", 
+             linetype = "dashed", 
+             linewidth = 1)
+
+```
+
+$H_0: \mu = 110$ (the population mean price is \$110)
+
+$H_a: \mu \ne 110$ (the population mean price is not \$110)
+
+```{r}
+t.test(Carseats$Price, mu = 110)
+
+
+```
+
+The p-value is small(1.429e-06), meaning data like ours would only occur about 0.01% of the time if the true mean was really \$110. This is strong evidence against the null hypothesis.
+
+**Conclusion** We reject the null hypothesis and conclude that the true average price is not \$110. The actual average appears to be higher, around \$115.80.
+
+**Question 2:**
+
+Compute a level 90% confidence interval for the mean competitor price in the population from which this sample is drawn. What is the sample mean? What is the margin of error?
+
+```{r}
+mean(Carseats$CompPrice)
+
+```
+
+```{r}
+t.test(Carseats$CompPrice, conf.level = 0.90)
+
+```
+
+Sample mean: \$124.97
+
+90% Confidence Interval: (\$123.71 , \$126.23)
+
+Margin of error: (126.23 - 123.71)/2 = \$1.26
+
+We are 90% confident that the true population mean competitor price falls between \$123.71 and \$126.23. The margin of error is about \$1.26.
+
+**Question 3:**
+
+Create a table with counts of penguin species and home islands in the penguins set. Include marginal counts in your table.
+
+```{r}
+t<- table(penguins$species, penguins$island)
+t
+addmargins(t)
+
+```
+
+**Question 4:**
